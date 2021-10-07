@@ -16,19 +16,11 @@ async function userInput () {
   rl.close()
   let totalarea = 0
 
-  totalarea += addAreas(counts.Constructors, buildings.Constructors)
-  totalarea += addAreas(counts.Smelteries, buildings.Smelteries)
-  totalarea += addAreas(counts.Miners, buildings.Miners)
+  for (const key in buildings) {
+    totalarea += counts[key] * area(buildings[key])
+  }
 
   console.log('Your total area  needed is: ' + totalarea)
-}
-
-function addAreas (num, building) {
-  let tempnumber = 0
-  for (let i = 0; i < num; i++) {
-    tempnumber += area(building)
-  }
-  return tempnumber
 }
 
 function getNumber (question) {
