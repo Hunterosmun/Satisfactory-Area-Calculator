@@ -7,23 +7,20 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-function userInput () {
-  getNumber(
-    'How many Constructors would you like to build? ',
-    numConstructors => {
-      getNumber('How many Smelters would you like to build? ', numSmelters => {
-        getNumber('How many Miners would you like to build? ', numMiners => {
-          rl.close()
-          let totalarea = 0
+async function userInput () {
+  const counts = {}
+  for (const key in buildings) {
+    counts[key] = await getNumber(`how many ${key} do you want?`)
+  }
+  //console.log(counts)
+  rl.close()
+  let totalarea = 0
 
-          totalarea += addAreas(numConstructors, buildings.Constructor)
-          totalarea += addAreas(numSmelters, buildings.Smeltery)
-          totalarea += addAreas(numMiners, buildings.Miner)
-          console.log('Your total area  needed is: ' + totalarea)
-        })
-      })
-    }
-  )
+  totalarea += addAreas(counts.Constructors, buildings.Constructors)
+  totalarea += addAreas(counts.Smelteries, buildings.Smelteries)
+  totalarea += addAreas(counts.Miners, buildings.Miners)
+
+  console.log('Your total area  needed is: ' + totalarea)
 }
 
 function addAreas (num, building) {
@@ -34,14 +31,16 @@ function addAreas (num, building) {
   return tempnumber
 }
 
-function getNumber (question, cb) {
-  rl.question(question, answer => {
-    if (isNaN(answer)) {
-      console.log('please enter a number.')
-      getNumber(question, cb)
-    } else {
-      cb(+answer)
-    }
+function getNumber (question) {
+  return new Promise(function (resolve) {
+    rl.question(question, answer => {
+      if (isNaN(answer)) {
+        console.log('please enter a number.')
+        getNumber(question).then(resolve)
+      } else {
+        resolve(+answer)
+      }
+    })
   })
 }
 
