@@ -10,7 +10,7 @@ const rl = readline.createInterface({
 async function userInput () {
   const counts = {}
   for (const key in buildings) {
-    counts[key] = await getNumber(`how many ${key} do you want?`)
+    counts[key] = await getNumber(`how many ${key} do you want? \n`)
   }
   //console.log(counts)
   rl.close()
@@ -21,6 +21,9 @@ async function userInput () {
   }
 
   console.log('Your total area  needed is: ' + totalarea)
+  let concreteNeeded = Math.ceil(totalarea / 64)
+  console.log(`You will need ${concreteNeeded} concrete in order to make that.`)
+  //concrete costs 6 and covers a 8x8 (64)
 }
 
 function getNumber (question) {
